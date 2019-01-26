@@ -60,8 +60,7 @@ class ViewController: NSViewController {
     //To here...  Thanks for Giants.
     
     @IBAction func format(_ sender: NSButton) {
-        let swiftCode2: NSTextView = swiftCode.documentView! as! NSTextView
-        let swiftCodeString:String = swiftCode2.string
+        let swiftCodeString:String = swiftCode1.string
 
         //Simple line replacements are here.
         kotlinCodeString = swiftCodeString.replacingOccurrences(of: "let", with: "val")
@@ -72,8 +71,8 @@ class ViewController: NSViewController {
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "for i in 0..<count", with: "for (i in 0..count - 1)")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "[String]()", with: "arrayOf<String>()")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "[String: Float]()", with: "mapOf<String, Float>()")
-
-        
+        kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "...", with: "..")
+        kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "..<", with: "until")
         
         //Multiple lines replacements are here.
         
@@ -84,6 +83,31 @@ class ViewController: NSViewController {
         kotlinCode1.string = kotlinCodeString
     }
     
-
+    @IBAction func saveTxtFile(_ sender: Any) {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
+        let fileObject = kotlinCode1.string
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let date = formatter.string(from: Date())
+        let fileName = "\(date)Kotlin"
+        let filePath = documentsPath + "/" + fileName
+        
+        do {
+            try fileObject.write(toFile: filePath, atomically: true,
+                                 encoding: String.Encoding.utf8)
+            
+            let alert = NSAlert()
+            alert.messageText = filePath
+            alert.runModal()
+            
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = "Error"
+            alert.runModal()
+        }
+        
+    }
+    
 }
 

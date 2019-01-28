@@ -63,9 +63,9 @@ class ViewController: NSViewController {
         let swiftCodeString:String = swiftCode1.string
 
         //Simple line replacements are here.
-        kotlinCodeString = swiftCodeString.replacingOccurrences(of: "let", with: "val")
+        kotlinCodeString = swiftCodeString.replacingOccurrences(of: "let ", with: "val ")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "print", with: "println")
-        kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "func", with: "fun")
+        kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "func ", with: "fun ")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "->", with: ":")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "\\(", with: "${")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "for i in 0..<count", with: "for (i in 0..count - 1)")
@@ -75,15 +75,23 @@ class ViewController: NSViewController {
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "..<", with: "until")
         
         //Multiple lines replacements are here.
+        var sentenceFun = kotlinCodeString!
+        var arr:[String]
+        var token : String
+        if sentenceFun.contains("for ") {
+            arr = sentenceFun.components(separatedBy: "for")
+            token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
+            token = "(" + token + ")"
+            arr[1] = token
+            sentenceFun = arr.joined()
+        }
         
-        
-        
-        
-        
+        kotlinCodeString = sentenceFun
         kotlinCode1.string = kotlinCodeString
     }
     
     @IBAction func saveTxtFile(_ sender: Any) {
+        //Copied from http://www.royalcrab.net/wpx/?p=6171
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
         let fileObject = kotlinCode1.string
         

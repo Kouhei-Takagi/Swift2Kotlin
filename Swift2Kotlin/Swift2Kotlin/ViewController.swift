@@ -73,20 +73,43 @@ class ViewController: NSViewController {
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "[String: Float]()", with: "mapOf<String, Float>()")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "...", with: "..")
         kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "..<", with: "until")
+        kotlinCodeString = kotlinCodeString.replacingOccurrences(of: "switch ", with: "when ")
         
         //Multiple lines replacements are here.
         var sentenceFun = kotlinCodeString!
         var arr:[String]
+        var arr2:[String]
         var token : String
+        var token2 : String
+        
         if sentenceFun.contains("for ") {
             arr = sentenceFun.components(separatedBy: "for")
+            arr2 = arr[1].components(separatedBy: "{")
             token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
-            token = "(" + token + ")"
+            token = "for " + "(" + token + ")"
+            arr2.remove(at: 0)
+            token = token + " {" + arr2.joined()
             arr[1] = token
             sentenceFun = arr.joined()
         }
-        
         kotlinCodeString = sentenceFun
+        
+        if sentenceFun.contains("when ") {
+            arr = sentenceFun.components(separatedBy: "when")
+            arr2 = arr[1].components(separatedBy: "}")
+            token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
+            token = "when " + "(" + token + ")"
+            token2 = String(arr2[0][(arr2[0].index(of: "{") ?? arr2[0].startIndex)...(arr2[0].index(of: "}") ?? arr2[0].index(before: arr2[0].endIndex))]);
+            token2 = token2.replacingOccurrences(of: "case", with: "in")
+            token2 = token2.replacingOccurrences(of: "default", with: "else")
+            arr2.remove(at: 0)
+            token2 = token2  + " }" + arr2.joined()
+            arr[1] = token + token2
+            sentenceFun = arr.joined()
+        }
+        kotlinCodeString = sentenceFun
+        
+        
         kotlinCode1.string = kotlinCodeString
     }
     

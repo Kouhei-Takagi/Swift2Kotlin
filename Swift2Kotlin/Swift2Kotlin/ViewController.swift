@@ -88,7 +88,7 @@ class ViewController: NSViewController {
             token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
             token = "for " + "(" + token + ")"
             arr2.remove(at: 0)
-            token = token + " {" + arr2.joined()
+            token = token + "{" + arr2.joined(separator: "{")
             arr[1] = token
             sentenceFun = arr.joined()
         }
@@ -96,15 +96,14 @@ class ViewController: NSViewController {
         
         if sentenceFun.contains("when ") {
             arr = sentenceFun.components(separatedBy: "when")
-            arr2 = arr[1].components(separatedBy: "}")
             token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
             token = "when " + "(" + token + ")"
+            arr2 = arr[1].components(separatedBy: "}")
             token2 = String(arr2[0][(arr2[0].index(of: "{") ?? arr2[0].startIndex)...(arr2[0].index(of: "}") ?? arr2[0].index(before: arr2[0].endIndex))]);
             token2 = token2.replacingOccurrences(of: "case", with: "in")
             token2 = token2.replacingOccurrences(of: "default", with: "else")
             arr2.remove(at: 0)
-            token2 = token2  + " }" + arr2.joined()
-            arr[1] = token + token2
+            arr[1] = token + token2 + "}" + arr2.joined(separator: "}")
             sentenceFun = arr.joined()
         }
         kotlinCodeString = sentenceFun

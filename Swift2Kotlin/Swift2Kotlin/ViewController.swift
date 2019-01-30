@@ -96,6 +96,21 @@ class ViewController: NSViewController {
             numberFor = numberFor - 1
         }
         
+        arr = sentenceFun.components(separatedBy: "if")
+        numberFor = arr.count - 1
+        while numberFor > 0 {
+            arr2 = arr[(numberFor)].components(separatedBy: "{")
+            token = String(arr[(numberFor)][(arr[(numberFor)].index(of: " ") ?? arr[(numberFor)].startIndex)..<(arr[(numberFor)].index(of: "{") ?? arr[(numberFor)].index(before: arr[(numberFor)].endIndex))]);
+            token.removeFirst(1)
+            token.removeLast(1)
+            token = "if " + "(" + token + ") "
+            arr2.remove(at: 0)
+            token = token + "{" + arr2.joined(separator: "{")
+            arr[(numberFor)] = token
+            sentenceFun = arr.joined()
+            numberFor = numberFor - 1
+        }
+        
         arr = sentenceFun.components(separatedBy: "when")
         numberFor = arr.count - 1
         

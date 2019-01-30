@@ -82,11 +82,13 @@ class ViewController: NSViewController {
         var token : String
         var token2 : String
         var numberFor : Int = arr.count - 1
-        //arr[0]は前半部分、arr[1]はメイン、arr[2]も次のメイン。。。
+        
         while numberFor > 0 {
             arr2 = arr[(numberFor)].components(separatedBy: "{")
             token = String(arr[(numberFor)][(arr[(numberFor)].index(of: " ") ?? arr[(numberFor)].startIndex)..<(arr[(numberFor)].index(of: "{") ?? arr[(numberFor)].index(before: arr[(numberFor)].endIndex))]);
-            token = "for " + "(" + token + ")"
+            token.removeFirst(1)
+            token.removeLast(1)
+            token = "for " + "(" + token + ") "
             arr2.remove(at: 0)
             token = token + "{" + arr2.joined(separator: "{")
             arr[(numberFor)] = token
@@ -94,26 +96,14 @@ class ViewController: NSViewController {
             numberFor = numberFor - 1
         }
         
-        /*
-        if sentenceFun.contains("for ") {
-            arr = sentenceFun.components(separatedBy: "for")
-            arr2 = arr[1].components(separatedBy: "{")
-            token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
-            token = "for " + "(" + token + ")"
-            arr2.remove(at: 0)
-            token = token + "{" + arr2.joined(separator: "{")
-            arr[1] = token
-            sentenceFun = arr.joined()
-        }
-        kotlinCodeString = sentenceFun
-        */
-        
         arr = sentenceFun.components(separatedBy: "when")
         numberFor = arr.count - 1
         
         while numberFor > 0 {
             token = String(arr[(numberFor)][(arr[(numberFor)].index(of: " ") ?? arr[(numberFor)].startIndex)..<(arr[(numberFor)].index(of: "{") ?? arr[(numberFor)].index(before: arr[(numberFor)].endIndex))]);
-            token = "when " + "(" + token + ")"
+            token.removeFirst(1)
+            token.removeLast(1)
+            token = "when " + "(" + token + ") "
             arr2 = arr[(numberFor)].components(separatedBy: "}")
             token2 = String(arr2[0][(arr2[0].index(of: "{") ?? arr2[0].startIndex)...(arr2[0].index(of: "}") ?? arr2[0].index(before: arr2[0].endIndex))]);
             token2 = token2.replacingOccurrences(of: "case", with: "in")
@@ -123,22 +113,6 @@ class ViewController: NSViewController {
             sentenceFun = arr.joined()
             numberFor = numberFor - 1
         }
-        
-        
-        /*
-        if sentenceFun.contains("when ") {
-            arr = sentenceFun.components(separatedBy: "when")
-            token = String(arr[1][(arr[1].index(of: " ") ?? arr[1].startIndex)..<(arr[1].index(of: "{") ?? arr[1].index(before: arr[1].endIndex))]);
-            token = "when " + "(" + token + ")"
-            arr2 = arr[1].components(separatedBy: "}")
-            token2 = String(arr2[0][(arr2[0].index(of: "{") ?? arr2[0].startIndex)...(arr2[0].index(of: "}") ?? arr2[0].index(before: arr2[0].endIndex))]);
-            token2 = token2.replacingOccurrences(of: "case", with: "in")
-            token2 = token2.replacingOccurrences(of: "default", with: "else")
-            arr2.remove(at: 0)
-            arr[1] = token + token2 + "}" + arr2.joined(separator: "}")
-            sentenceFun = arr.joined()
-        }
-        */
         
         kotlinCodeString = sentenceFun
         kotlinCode1.string = kotlinCodeString
